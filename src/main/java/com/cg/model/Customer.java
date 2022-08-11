@@ -3,11 +3,12 @@ package com.cg.model;
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.util.List;
+
 
 @Entity
 @Table(name = "customers")
-public class Customer {
+public class Customer extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,44 +21,39 @@ public class Customer {
     private String email;
 
     private String phone;
-
     private String address;
 
     @Digits(integer = 12, fraction = 0)
     private BigDecimal balance;
 
 
-    @Column(name = "created_at")
-    private Date createdAt;
+    @OneToMany(mappedBy = "customer")
+    private List<Deposit> deposits;
 
-    @Column(name = "created_by")
-    private Long createdBy;
+    @OneToMany(mappedBy = "customer")
+    private List<Withdraw> withdraws;
 
-    @Column(name = "updated_at")
-    private Date updatedAt;
+    @OneToMany(mappedBy = "sender")
+    private List<Transfer> senders;
 
-    @Column(name = "updated_by")
-    private Long updatedBy;
-
-    @Column(columnDefinition = "boolean default false")
-    private Boolean deleted;
+    @OneToMany(mappedBy = "recipient")
+    private List<Transfer> recipients;
 
 
 	public Customer() {
 	}
 
-    public Customer(Long id, String fullName, String email, String phone, String address, @Digits(integer = 12, fraction = 0) BigDecimal balance, Date createdAt, Long createdBy, Date updatedAt, Long updatedBy, Boolean deleted) {
-        this.id = id;
+    public Customer(Long id, String fullName, String email, String phone, String address, @Digits(integer = 12, fraction = 0) BigDecimal balance, List<Deposit> deposits, List<Withdraw> withdraws, List<Transfer> senders, List<Transfer> recipients) {
+	    this.id = id;
         this.fullName = fullName;
         this.email = email;
         this.phone = phone;
         this.address = address;
         this.balance = balance;
-        this.createdAt = createdAt;
-        this.createdBy = createdBy;
-        this.updatedAt = updatedAt;
-        this.updatedBy = updatedBy;
-        this.deleted = deleted;
+        this.deposits = deposits;
+        this.withdraws = withdraws;
+        this.senders = senders;
+        this.recipients = recipients;
     }
 
     public Long getId() {
@@ -108,43 +104,35 @@ public class Customer {
         this.balance = balance;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public List<Deposit> getDeposits() {
+        return deposits;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setDeposits(List<Deposit> deposits) {
+        this.deposits = deposits;
     }
 
-    public Long getCreatedBy() {
-        return createdBy;
+    public List<Withdraw> getWithdraws() {
+        return withdraws;
     }
 
-    public void setCreatedBy(Long createdBy) {
-        this.createdBy = createdBy;
+    public void setWithdraws(List<Withdraw> withdraws) {
+        this.withdraws = withdraws;
     }
 
-    public Date getUpdatedAt() {
-        return updatedAt;
+    public List<Transfer> getSenders() {
+        return senders;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setSenders(List<Transfer> senders) {
+        this.senders = senders;
     }
 
-    public Long getUpdatedBy() {
-        return updatedBy;
+    public List<Transfer> getRecipients() {
+        return recipients;
     }
 
-    public void setUpdatedBy(Long updatedBy) {
-        this.updatedBy = updatedBy;
-    }
-
-    public Boolean getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        this.deleted = deleted;
+    public void setRecipients(List<Transfer> recipients) {
+        this.recipients = recipients;
     }
 }
