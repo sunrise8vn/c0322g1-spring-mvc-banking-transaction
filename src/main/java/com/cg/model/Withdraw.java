@@ -1,7 +1,6 @@
 package com.cg.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
 
 
@@ -13,8 +12,7 @@ public class Withdraw extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Digits(integer = 12, fraction = 0)
-    @Column(name = "transaction_amount")
+    @Column(name = "transaction_amount", precision = 12, scale = 0)
     private BigDecimal transactionAmount;
 
     @ManyToOne
@@ -24,7 +22,7 @@ public class Withdraw extends BaseEntity {
     public Withdraw() {
     }
 
-    public Withdraw(Long id, @Digits(integer = 12, fraction = 0) BigDecimal transactionAmount, Customer customer) {
+    public Withdraw(Long id, BigDecimal transactionAmount, Customer customer) {
         this.id = id;
         this.transactionAmount = transactionAmount;
         this.customer = customer;

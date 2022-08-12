@@ -9,3 +9,12 @@ header tr {
     background-color: #4caf50;
     color: #fff;
 }
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100vw;
+    color: #842029;
+    background-color: #f8d7da;
+    border-color: #f5c2c7;
+}

@@ -1,7 +1,6 @@
 package com.cg.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
 
 
@@ -13,18 +12,15 @@ public class Transfer extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Digits(integer = 12, fraction = 0)
-    @Column(name = "transfer_amount")
+    @Column(name = "transfer_amount", precision = 12, scale = 0)
     private BigDecimal transferAmount;
 
     private float fees;
 
-    @Digits(integer = 12, fraction = 0)
-    @Column(name = "fees_amount")
+    @Column(name = "fees_amount", precision = 12, scale = 0)
     private BigDecimal feesAmount;
 
-    @Digits(integer = 12, fraction = 0)
-    @Column(name = "transaction_amount")
+    @Column(name = "transaction_amount", precision = 12, scale = 0)
     private BigDecimal transactionAmount;
 
     @ManyToOne
@@ -38,7 +34,7 @@ public class Transfer extends BaseEntity {
     public Transfer() {
     }
 
-    public Transfer(Long id, @Digits(integer = 12, fraction = 0) BigDecimal transferAmount, float fees, @Digits(integer = 12, fraction = 0) BigDecimal feesAmount, @Digits(integer = 12, fraction = 0) BigDecimal transactionAmount, Customer sender, Customer recipient) {
+    public Transfer(Long id, BigDecimal transferAmount, float fees, BigDecimal feesAmount, BigDecimal transactionAmount, Customer sender, Customer recipient) {
         this.id = id;
         this.transferAmount = transferAmount;
         this.fees = fees;

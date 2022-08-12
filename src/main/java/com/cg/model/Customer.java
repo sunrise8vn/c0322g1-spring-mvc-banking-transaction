@@ -1,7 +1,6 @@
 package com.cg.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -23,7 +22,7 @@ public class Customer extends BaseEntity {
     private String phone;
     private String address;
 
-    @Digits(integer = 12, fraction = 0)
+    @Column(precision = 12, scale = 0)
     private BigDecimal balance;
 
 
@@ -43,7 +42,7 @@ public class Customer extends BaseEntity {
 	public Customer() {
 	}
 
-    public Customer(Long id, String fullName, String email, String phone, String address, @Digits(integer = 12, fraction = 0) BigDecimal balance, List<Deposit> deposits, List<Withdraw> withdraws, List<Transfer> senders, List<Transfer> recipients) {
+    public Customer(Long id, String fullName, String email, String phone, String address, BigDecimal balance, List<Deposit> deposits, List<Withdraw> withdraws, List<Transfer> senders, List<Transfer> recipients) {
 	    this.id = id;
         this.fullName = fullName;
         this.email = email;
@@ -135,4 +134,5 @@ public class Customer extends BaseEntity {
     public void setRecipients(List<Transfer> recipients) {
         this.recipients = recipients;
     }
+
 }

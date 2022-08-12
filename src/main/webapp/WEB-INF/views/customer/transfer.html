@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Transfer</title>
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="row">
+                <div class="col-sm-5">
+                    <h1>List of customers</h1>
+                </div>
+                <div class="col-sm-7">
+                    <a href="/customers" class="btn btn-outline-light">
+                        <i class="fa" aria-hidden="true"></i>
+                        <span>List of customers</span>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <div class="content">
+            <div>
+                <form class="form-group" method="POST" th:object="${sender}">
+                    <div class="row mt-3">
+                        <div class="col-lg-3">
+                            <label>Sender Id</label>
+                            <input type="text" th:field="*{id}" class="form-control" readonly>
+                        </div>
+                        <div class="col-lg-3">
+                            <label>Sender Name</label>
+                            <input type="text"  th:field="*{fullName}" class="form-control" readonly>
+                        </div>
+                        <div class="col-lg-3">
+                            <label>Sender Email</label>
+                            <input type="text"  th:field="*{email}" class="form-control" readonly>
+                        </div>
+                        <div class="col-lg-3">
+                            <label>Sender Balance</label>
+                            <input type="text" th:field="*{balance}" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <div class="row mt-3" th:object="${transfer}">
+                        <div class="col-lg-3">
+                            <label>Recipient Name</label>
+                            <select th:field="*{recipient}" class="form-select">
+                                <th:block th:each="item : ${recipients}">
+                                    <option th:value="${item.id}" th:text="${'(' + item.id + ') ' + item.fullName}"></option>
+                                </th:block>
+                            </select>
+                        </div>
+                        <div class="col-lg-3">
+                            <label>Transfer Amount ($)</label>
+                            <input type="text" class="form-control" th:field="*{transferAmount}">
+                        </div>
+                        <div class="col-lg-3">
+                            <label>Fees (%)</label>
+                            <input type="text" class="form-control" value="10" readonly>
+                        </div>
+                        <div class="col-lg-3">
+                            <label>Transaction Amount ($)</label>
+                            <input type="text" class="form-control" th:field="*{transactionAmount}" readonly>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-lg-3">
+                            <button type="submit" class="btn btn-outline-primary">
+                                Transfer
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <th:block th:if="${errors != null}">
+                <h3>Please correct errors below:</h3>
+                <ul>
+                    <li th:text="${errors}"></li>
+                </ul>
+            </th:block>
+        </div>
+    </footer>
+
+    <script src="/assets/jquery/jquery-v3.6.0.min.js"></script>
+
+    <script>
+        // let transferAmount = $("#transferAmount").val();
+
+        $("#transferAmount").on("input", function() {
+            let transferAmount = +$(this).val();
+            let fees = 10;
+            let feesAmount = transferAmount * fees / 100;
+            let transactionAmount = transferAmount + feesAmount;
+
+            $("#transactionAmount").val(transactionAmount);
+        });
+
+    </script>
+
+</body>
+</html>
