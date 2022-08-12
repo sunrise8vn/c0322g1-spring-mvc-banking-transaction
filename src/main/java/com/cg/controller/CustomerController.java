@@ -154,19 +154,23 @@ public class CustomerController {
             transfer.setTransactionAmount(transactionAmount);
             transfer.setSender(senderOptional.get());
 
-            transferService.save(transfer);
+            transfer.setSender(sender);
 
-            currentSenderBalance = currentSenderBalance.subtract(transactionAmount);
-            sender.setBalance(currentSenderBalance);
+//            transferService.save(transfer);
+//
+//            currentSenderBalance = currentSenderBalance.subtract(transactionAmount);
+//            sender.setBalance(currentSenderBalance);
+//
+//            sender = customerService.save(sender);
+//
+//            Customer recipient = transfer.getRecipient();
+//            BigDecimal newRecipientBalance = recipient.getBalance();
+//            newRecipientBalance = newRecipientBalance.add(transferAmount);
+//            recipient.setBalance(newRecipientBalance);
+//
+//            customerService.save(recipient);
 
-            sender = customerService.save(sender);
-
-            Customer recipient = transfer.getRecipient();
-            BigDecimal newRecipientBalance = recipient.getBalance();
-            newRecipientBalance = newRecipientBalance.add(transferAmount);
-            recipient.setBalance(newRecipientBalance);
-
-            customerService.save(recipient);
+            transferService.doTransfer(transfer);
         }
 
         List<Customer> recipients = customerService.findByIdIsNot(senderId);

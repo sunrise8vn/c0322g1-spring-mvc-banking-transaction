@@ -10,4 +10,6 @@ public interface TransferService extends IGeneralService<Transfer> {
     List<Transfer> findAll();
 
     List<TransferHistoryDTO> findAllHistories();
+
+    void doTransfer(Transfer transfer);
 }
