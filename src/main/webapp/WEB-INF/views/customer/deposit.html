@@ -7,58 +7,65 @@
     <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>
-<div class="container">
-    <header>
-        <div class="row">
-            <div class="col-sm-5">
-                <h1>List of customers</h1>
+    <div class="container">
+        <header>
+            <div class="row">
+                <div class="col-sm-5">
+                    <h1>List of customers</h1>
+                </div>
+                <div class="col-sm-7">
+                    <a href="/customers" class="btn btn-outline-light">
+                        <i class="fa" aria-hidden="true"></i>
+                        <span>List of customers</span>
+                    </a>
+                </div>
             </div>
-            <div class="col-sm-7">
-                <a href="/customers" class="btn btn-outline-light">
-                    <i class="fa" aria-hidden="true"></i>
-                    <span>List of customers</span>
-                </a>
-            </div>
-        </div>
-    </header>
+        </header>
 
-    <div class="content">
-        <div>
-            <form class="form-group" method="POST" th:object="${customer}">
-                <div class="row mt-3">
-                    <div class="col-lg-6">
-                        <label>Customer ID</label>
-                        <input type="text" th:field="*{id}" class="form-control" readonly>
+        <div class="content">
+            <div>
+                <form class="form-group" method="POST" th:object="${customer}">
+                    <div class="row mt-3">
+                        <div class="col-lg-6">
+                            <label>Customer ID</label>
+                            <input type="text" th:field="*{id}" class="form-control" readonly>
+                        </div>
+                        <div class="col-lg-6">
+                            <label>Full Name</label>
+                            <input type="text" th:field="*{fullName}" class="form-control" readonly>
+                        </div>
                     </div>
-                    <div class="col-lg-6">
-                        <label>Full Name</label>
-                        <input type="text" th:field="*{fullName}" class="form-control" readonly>
+                    <div class="row mt-3">
+                        <div class="col-lg-6">
+                            <label>Current Balance ($)</label>
+                            <input type="text" th:field="*{balance}" class="form-control" readonly>
+                        </div>
+                        <div class="col-lg-6" th:object="${deposit}">
+                            <label>Transaction Amount</label>
+                            <input type="text" th:field="*{transactionAmount}" class="form-control">
+                        </div>
                     </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-lg-6">
-                        <label>Current Balance ($)</label>
-                        <input type="text" th:field="*{balance}" class="form-control" readonly>
+                    <div class="row mt-3">
+                        <div class="col-lg-3">
+                            <button type="submit" class="btn btn-outline-success">
+                                Deposit
+                            </button>
+                        </div>
                     </div>
-                    <div class="col-lg-6" th:object="${deposit}">
-                        <label>Transaction Amount</label>
-                        <input type="text" th:field="*{transactionAmount}" class="form-control">
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-lg-3">
-                        <button type="submit" class="btn btn-outline-success">
-                            Deposit
-                        </button>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 
     <footer>
-
+        <div class="container">
+            <th:block th:if="${errors}">
+                <h3>Please correct errors below:</h3>
+                <ul>
+                    <li th:each="err : ${#fields.errors('deposit.*')}" th:text="${err}"></li>
+                </ul>
+            </th:block>
+        </div>
     </footer>
-</div>
 </body>
 </html>

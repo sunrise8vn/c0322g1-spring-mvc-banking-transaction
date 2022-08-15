@@ -1,7 +1,14 @@
 package com.cg.model;
 
+import org.springframework.format.annotation.NumberFormat;
+
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
+
+import static org.springframework.format.annotation.NumberFormat.Style.NUMBER;
 
 
 @Entity
@@ -12,6 +19,8 @@ public class Deposit extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @DecimalMin(value = "100", message = "Số tiền tối thiểu là 100")
+    @DecimalMax(value = "10000", message = "Số tiền tối đa là 10.000")
     @Column(name = "transaction_amount", precision = 12, scale = 0)
     private BigDecimal transactionAmount;
 

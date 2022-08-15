@@ -8,10 +8,14 @@ import com.cg.service.CustomerService;
 import com.cg.service.DepositService;
 import com.cg.service.TransferService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +47,23 @@ public class CustomerController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("customer/create");
         modelAndView.addObject("customer", new Customer());
+
+        return modelAndView;
+    }
+
+    @GetMapping("/update/{customerId}")
+    public ModelAndView showUpdatePage(@PathVariable Long customerId) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("customer/update");
+
+        Optional<Customer> customerOptional = customerService.findById(customerId);
+
+        if (!customerOptional.isPresent()) {
+            modelAndView.setViewName("error/404");
+            return modelAndView;
+        }
+
+        modelAndView.addObject("customer", customerOptional.get());
 
         return modelAndView;
     }
@@ -88,9 +109,15 @@ public class CustomerController {
     }
 
     @PostMapping("/create")
-    public ModelAndView doCreate(@ModelAttribute Customer customer) {
+    public ModelAndView doCreate(@Validated @ModelAttribute Customer customer, BindingResult bindingResult) {
+
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("customer/create");
+
+        if (bindingResult.hasFieldErrors()) {
+            modelAndView.addObject("errors", true);
+            return modelAndView;
+        }
 
         customer.setId(0L);
         customer.setBalance(new BigDecimal(0L));
@@ -101,29 +128,48 @@ public class CustomerController {
         return modelAndView;
     }
 
-    @PostMapping("/deposit/{customerId}")
-    public ModelAndView doCreate(@PathVariable Long customerId, @ModelAttribute Deposit deposit) {
+    @PostMapping("/update/{customerId}")
+    public ModelAndView doUpdate(@PathVariable Long customerId, @ModelAttribute Customer customer) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("customer/deposit");
+        modelAndView.setViewName("customer/update");
 
         Optional<Customer> customerOptional = customerService.findById(customerId);
 
-        Customer customer = customerOptional.get();
+        if (!customerOptional.isPresent()) {
+            modelAndView.setViewName("error/404");
+            return  modelAndView;
+        }
 
-        BigDecimal currentBalance = customer.getBalance();
+        customer.setId(customerId);
 
-        BigDecimal newBalance;
+        customerService.save(customer);
 
-        BigDecimal transactionAmount = deposit.getTransactionAmount();
+        modelAndView.addObject("customer", customer);
 
-        newBalance = currentBalance.add(transactionAmount);
+        return modelAndView;
+    }
 
-        customer.setBalance(newBalance);
+    @PostMapping("/deposit/{customerId}")
+    public ModelAndView doDeposit(@PathVariable Long customerId, @ModelAttribute Customer customer, @Validated @ModelAttribute Deposit deposit, BindingResult bindingResult) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("customer/deposit");
 
-        deposit.setCustomer(customer);
-        depositService.save(deposit);
+        if (bindingResult.hasFieldErrors()) {
+            modelAndView.addObject("errors", true);
+//            modelAndView.addObject("deposit", deposit);
+            return modelAndView;
+        }
 
-        Customer newCustomer = customerService.save(customer);
+        Optional<Customer> customerOptional = customerService.findById(customerId);
+
+        if (!customerOptional.isPresent()) {
+            modelAndView.setViewName("error/404");
+            return  modelAndView;
+        }
+
+        deposit.setCustomer(customerOptional.get());
+
+        Customer newCustomer = depositService.deposit(deposit);
 
         modelAndView.addObject("customer", newCustomer);
         modelAndView.addObject("deposit", new Deposit());

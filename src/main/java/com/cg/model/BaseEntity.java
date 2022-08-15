@@ -13,7 +13,7 @@ import java.util.Date;
 public abstract class BaseEntity {
 
     @CreationTimestamp
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false)
     private Date createdAt;
 
     @Column(name = "created_by")

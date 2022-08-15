@@ -1,6 +1,10 @@
 package com.cg.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -16,13 +20,16 @@ public class Customer extends BaseEntity {
     @Column(name = "full_name")
     private String fullName;
 
+    @NotBlank(message = "Vui lòng nhập email")
+    @Size(min = 5, max = 20, message = "Độ dài email từ 5-20 ký tự")
+    @Email(message = "Vui lòng nhập đúng kiểu email")
     @Column(nullable = false, unique = true)
     private String email;
 
     private String phone;
     private String address;
 
-    @Column(precision = 12, scale = 0)
+    @Column(precision = 12, scale = 0, updatable = false)
     private BigDecimal balance;
 
 
